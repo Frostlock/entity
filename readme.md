@@ -1,3 +1,8 @@
+## Introduction
+This is an experiment in creating a personal assistant, an entity :)  
+The entity has a command line interface and a voice interface. This was mainly 
+an experiment for me to get some experience with speech recognition and text to speech.
+
 ## Dependencies
 
 **Prefer Python 3**  
@@ -15,7 +20,7 @@ sudo pip3 install gTTS --upgrade
 pygame  
 sudo pip3 install pygame --upgrade
 
-**NLP**  
+**Natural Language Processing**  
 textblob
 https://textblob.readthedocs.io/en/dev/install.html#installing-upgrading-from-the-pypi
 
