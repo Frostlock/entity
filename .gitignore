@@ -4,6 +4,9 @@ non_git/
 # exclude google secret file
 GoogleClientSecret.json
 
+# exclude raspberry deploy script
+raspberry_deploy.sh
+
 # exclude compiled python files
 *.py[cod]
 
