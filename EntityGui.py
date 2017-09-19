@@ -49,19 +49,39 @@ screen = pygame.display.set_mode(size)#, pygame.FULLSCREEN)
 # Setting mouse starting position in the middle helps to minimize this effect
 pygame.mouse.set_pos((display_width / 2, display_height / 2))
 
+# Other pygame related initialization
 clock = pygame.time.Clock()
-entity = Entity()
+pygame.font.init()
 
-bg_colors = {EntityStates.SLEEPING : (110, 110, 110),
-             EntityStates.LISTENING: (0, 255, 0),
+COLORS_BG = {EntityStates.SLEEPING : (110, 110, 110),
+             EntityStates.LISTENING: (0, 200, 0),
              EntityStates.BUSY: (200, 0, 0)}
+COLOR_TEXT = (210, 210, 210)
+COLOR_TEXT_BG = (40, 40, 40)
 
+latest_recognition_font = pygame.font.SysFont("monospace", 16)
+latest_recognition_txt = ">"
+latest_recognition_label = latest_recognition_font.render(latest_recognition_txt, 1, COLOR_TEXT)
+
+# Start up a dedicated thread for the entity.
+entity = Entity()
 _thread.start_new_thread(entity.run, ())
+
+# Main GUI loop
 try:
     running = True
     while running:
         # set background color based on entity state
-        screen.fill(bg_colors[entity.state])
+        screen.fill(COLORS_BG[entity.state])
+
+        # set latest recognition
+        if latest_recognition_txt != entity.voice_recognizer.latest_recognition:
+            latest_recognition_txt = entity.voice_recognizer.latest_recognition
+            latest_recognition_label = latest_recognition_font.render("> " + latest_recognition_txt, 1, COLOR_TEXT)
+            latest_recognition_surf = pygame.Surface((display_width - 20, 20))
+            latest_recognition_surf.fill(COLOR_TEXT_BG)
+            latest_recognition_surf.blit(latest_recognition_label, (4,2))
+        screen.blit(latest_recognition_surf, (10, 10))
 
         # Stop GUI when entity thread has run into an exception.
         if entity.thread_exception is not None:

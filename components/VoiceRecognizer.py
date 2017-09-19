@@ -9,8 +9,13 @@ class VoiceRecognizer(object):
     def recognizer(self):
         return self._recognizer
 
+    @property
+    def latest_recognition(self):
+        return self._latest_recognition
+
     def __init__(self):
         self._recognizer = speech_recognition.Recognizer()
+        self._latest_recognition = ""
 
     def listen(self, timeout=None, phrase_time_limit=None):
         """
@@ -49,10 +54,11 @@ class VoiceRecognizer(object):
         #                   {u'confidence': 0, u'transcript': u'carvers'}], u'final': True}
 
         if recognitions is not None:
-            return recognitions
+            self._latest_recognition = recognitions
         else:
-            return ""
+            self._latest_recognition = ""
 
+        return self.latest_recognition
 
 if __name__ == "__main__":
     vr = VoiceRecognizer()
