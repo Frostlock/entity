@@ -13,6 +13,7 @@ COMMANDS_SLEEP = ["sleep", "go to sleep", "nevermind", "talk to yo later"]
 COMMANDS_THANK = ["thanks", "thank you", "merci"]
 COMMANDS_TIME = ["what time is it", "what is the time", "time", "time please"]
 COMMANDS_DATE = ["what day is it", "what date is it", "what is the date", "date", "date please"]
+COMMANDS_FINALLY = ["finally", "that took long enough"]
 
 
 class BasicActions(Action):
@@ -27,6 +28,7 @@ class BasicActions(Action):
             (COMMANDS_THANK, self.respond_to_thanks),
             (COMMANDS_TIME, self.state_time),
             (COMMANDS_DATE, self.state_date),
+            (COMMANDS_FINALLY, self.respond_to_complaint)
         ]
 
     def process(self, text_blob):
@@ -64,7 +66,7 @@ class BasicActions(Action):
         return ""
 
     def respond_to_thanks(self):
-        self.log("BasicActions.py: RespondToThanks")
+        self.log("BasicActions.py: respond_to_thanks")
         answer = choice(["No problem.", "You're welcome.", "No problem!", "you're welcome.", "sure", "Happy to serve!"])
         return answer
 
@@ -75,3 +77,8 @@ class BasicActions(Action):
     def state_date(self):
         self.log("BasicActions.py: State date")
         return "Its " + datetime.strftime(datetime.now(), "%A %B %d %Y") + "."
+
+    def respond_to_complaint(self):
+        self.log("BasicActions.py: respond_to_complaint")
+        answer = choice(["Sorry.", "Apologies.", "I'm doing my best!"])
+        return answer
