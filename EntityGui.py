@@ -83,10 +83,13 @@ try:
             latest_recognition_surf.blit(latest_recognition_label, (4,2))
         screen.blit(latest_recognition_surf, (10, 10))
 
+        # Check status of Entity
         # Stop GUI when entity thread has run into an exception.
         if entity.thread_exception is not None:
             running = False
             raise entity.thread_exception
+        if not entity.running:
+            running = False
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
