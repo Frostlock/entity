@@ -6,7 +6,7 @@ from actions.GoogleActions import GoogleActions
 #from textblob import TextBlob
 
 import components.TextToSpeech as tts
-import components.VoiceRecognition as vr
+from components.VoiceRecognizer import VoiceRecognizer
 
 from time import time
 '''
@@ -89,9 +89,14 @@ class Entity(object):
     def running(self, running):
         self._running = running
 
+    @property
+    def voice_recognizer(self):
+        return self._voice_recognizer
+
     def __init__(self):
         self.basic_actions = BasicActions(self)
         self.google_actions = GoogleActions()
+        self._voice_recognizer = VoiceRecognizer()
         self.interaction_time = time()
         self.eliza = et.Eliza()
         self.elizaMode = False
@@ -130,7 +135,7 @@ class Entity(object):
             # Sleeping state
             # Wait for wake word, listen for short phrases
             if self.state == EntityStates.SLEEPING:
-                result = vr.listen(timeout=None, phrase_time_limit=1)
+                result = self.voice_recognizer.listen(timeout=None, phrase_time_limit=1)
                 if result != "":
                     for wakeword in COMMANDS_WAKEWORD:
                         if wakeword in result.lower().split():
@@ -145,7 +150,7 @@ class Entity(object):
             # Interaction state
             # Listen for longer phrases and try to process them
             if self.state == EntityStates.LISTENING:
-                command = vr.listen(timeout=None, phrase_time_limit=5)
+                command = self.voice_recognizer.listen(timeout=None, phrase_time_limit=5)
                 if command != "":
                     self.state = EntityStates.BUSY
                     self.interaction_time = time()
