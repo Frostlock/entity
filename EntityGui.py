@@ -102,9 +102,6 @@ try:
                     screen.fill((255, 0, 0))
                 else:
                     screen.fill((0, 255, 0))
-            # elif event.type == pygame.MOUSEMOTION:
-            #     print("mouse at (%d, %d)" % event.pos)
-            #     pass
 
         pygame.display.flip()
 
