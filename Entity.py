@@ -101,6 +101,9 @@ class Entity(object):
         self.eliza = et.Eliza()
         self.elizaMode = False
 
+    def log(self, message):
+        print(message)
+
     def run(self):
         """
         Wrapper around run_voice that adds exception handling. If there is an exception it is stored in the

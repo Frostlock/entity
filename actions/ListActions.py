@@ -1,5 +1,4 @@
 from actions import Action
-from Entity import Entity
 
 
 class ListActions(Action):
@@ -16,7 +15,7 @@ class ListActions(Action):
         Respond to provided command
         :return: Response
         """
-        assert isinstance(self.entity, Entity)
+        self.log("List all actions.")
         response = "I currently have " + str(len(self.entity.action_library.actions)) + " defined actions.\n"
         for action in self.entity.action_library.actions:
             response += action.action_name + ":\n"

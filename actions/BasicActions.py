@@ -6,7 +6,7 @@ from random import choice
 Command words for basic actions
 These have to be lower case and without punctuation.
 """
-COMMANDS_GREET = ["hello", "good morning", "morning", "good afternoon", "good evening"]
+COMMANDS_GREET = ["hi", "hello", "good morning", "morning", "good afternoon", "good evening"]
 COMMANDS_STATUS = ["status"]
 COMMANDS_SHUTDOWN = ["exit", "quit", "shutdown", "shutdown system", "goodbye", "shut down"]
 COMMANDS_SLEEP = ["sleep", "go to sleep", "nevermind", "talk to yo later"]
@@ -50,7 +50,7 @@ class BasicActions(Action):
         return ""
 
     def greet(self):
-        self.log("BasicActions.py: Greet")
+        self.log("Greet")
         hour = int(datetime.strftime(datetime.now(), "%H"))
         if hour < 12:
             return "Good morning"
@@ -60,33 +60,33 @@ class BasicActions(Action):
             return "Good evening"
 
     def status(self):
-        self.log("BasicActions.py: Report status")
+        self.log("Report status")
         return "System online and fully operational"
 
     def shutdown(self):
-        self.log("BasicActions.py: Initiating shutdown")
+        self.log("Initiating shutdown")
         self.entity.shutdown()
         return "Goodbye"
 
     def sleep(self):
-        self.log("BasicActions.py: Going to sleep")
+        self.log("Going to sleep")
         self.entity.sleep()
         return ""
 
     def respond_to_thanks(self):
-        self.log("BasicActions.py: respond_to_thanks")
+        self.log("Respond to thanks")
         answer = choice(["No problem.", "You're welcome.", "No problem!", "you're welcome.", "sure", "Happy to serve!"])
         return answer
 
     def state_time(self):
-        self.log("BasicActions.py: State time")
+        self.log("State time")
         return "Its " + datetime.strftime(datetime.now(), "%H:%M") + "."
 
     def state_date(self):
-        self.log("BasicActions.py: State date")
+        self.log("State date")
         return "Its " + datetime.strftime(datetime.now(), "%A %B %d %Y") + "."
 
     def respond_to_complaint(self):
-        self.log("BasicActions.py: respond_to_complaint")
+        self.log("Respond to complaint")
         answer = choice(["Sorry.", "Apologies.", "I'm doing my best!"])
         return answer

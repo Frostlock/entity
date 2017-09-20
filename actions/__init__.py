@@ -1,4 +1,3 @@
-
 from os.path import dirname, basename, isfile
 import glob
 
@@ -13,6 +12,7 @@ class Action(object):
         return self._entity
 
     def __init__(self, entity):
+        #assert isinstance(entity, Entity)
         self._entity = entity
 
     @property
@@ -66,8 +66,8 @@ class Action(object):
             return False
 
     def log(self, msg):
-        print(msg)
-        return
+        source = str(self.__class__)
+        self.entity.log(source + ": " + msg)
 
 
 class ActionLibrary(object):
