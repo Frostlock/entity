@@ -20,15 +20,18 @@ SCOPES = 'https://www.googleapis.com/auth/tasks.readonly'
 CLIENT_SECRET_FILE = 'GoogleClientSecret.json'
 APPLICATION_NAME = 'Google Tasks API Python Quickstart'
 
-COMMANDS_TASKS = ["what are my to do's", "what are my tasks", "list my tasks", "to do list", "tasks"]
+ACTION_GROUP = "Google services"
+ACTION_GROUP_DESCRIPTION = "Access to several Google services."
 
-class GoogleActions(Action):
 
-    _action_name = "Google services"
-    _action_description = "Access to several Google services."
+class GoogleActionListTasks(Action):
+
+    _action_name = "List Google tasks"
+    _action_description = "List current google tasks."
+    _command_words = ["what are my to do's", "what are my tasks", "list my tasks", "to do list", "tasks"]
 
     def __init__(self, entity):
-        super(GoogleActions, self).__init__(entity)
+        super(GoogleActionListTasks, self).__init__(entity)
 
     def get_credentials(self):
         """Gets valid user credentials from storage.
@@ -58,7 +61,7 @@ class GoogleActions(Action):
             self.log('Storing credentials to ' + credential_path)
         return credentials
 
-    def list_tasks(self):
+    def respond(self, command):
         """
         Provides a summary of current tasks.
         Tasklist ID is currently hardcoded.
@@ -83,18 +86,7 @@ class GoogleActions(Action):
                     answer += item['title'] + ", "
             return answer[:-2]
 
-    def match(self, command):
-        if command in COMMANDS_TASKS:
-            return True
-        else:
-            return False
-
-    def respond(self, command):
-        if command in COMMANDS_TASKS:
-            return self.list_tasks()
-        else:
-            return ""
 
 if __name__ == '__main__':
-    GA = GoogleActions()
-    print(GA.list_tasks())
+    GA = GoogleActionListTasks()
+    print(GA.respond("brol"))
