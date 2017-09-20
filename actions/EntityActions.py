@@ -34,3 +34,24 @@ class ReloadActions(Action):
         self.entity.reload_action_library()
         response += "I now have " + str(len(self.entity.action_library.actions)) + " defined actions.\n"
         return response
+
+
+class ToggleDebugMode(Action):
+
+    _action_name = "Toggle debug mode"
+    _action_description = "This action will toggle debug output."
+    _command_words = ["toggle debug", "toggle debug mode"]
+
+    def __init__(self, entity):
+        super(ToggleDebugMode, self).__init__(entity)
+
+    def respond(self, command):
+        if self.entity.debug_mode:
+            self.log("Disabling entity debug mode.")
+            self.entity.debug_mode = False
+            response = "Debug mode deactivated."
+        else:
+            self.log("Enabling entity debug mode.")
+            self.entity.debug_mode = True
+            response = "Debug mode activated."
+        return response

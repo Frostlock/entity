@@ -94,15 +94,25 @@ class Entity(object):
     def action_library(self):
         return self._action_library
 
+    @property
+    def debug_mode(self):
+        return self._debug_mode
+
+    @debug_mode.setter
+    def debug_mode(self, bool):
+        self._debug_mode = bool
+
     def __init__(self):
         self._voice_recognizer = VoiceRecognizer()
         self._action_library = ActionLibrary(self)
+        self.debug_mode = False
         self.interaction_time = time()
         self.eliza = et.Eliza()
         self.elizaMode = False
 
     def log(self, message):
-        print(message)
+        if self.debug_mode:
+            print(message)
 
     def reload_action_library(self):
         self._action_library = ActionLibrary(self)
