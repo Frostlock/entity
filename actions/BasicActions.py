@@ -18,6 +18,9 @@ COMMANDS_FINALLY = ["finally", "that took long enough"]
 
 class BasicActions(Action):
 
+    _action_name = "Basic actions"
+    _action_description = "A number of direct question and response combinations."
+
     def __init__(self, entity):
         super(BasicActions, self).__init__(entity)
         self.ACTIONS = [

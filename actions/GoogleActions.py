@@ -24,6 +24,9 @@ COMMANDS_TASKS = ["what are my to do's", "what are my tasks", "list my tasks", "
 
 class GoogleActions(Action):
 
+    _action_name = "Google services"
+    _action_description = "Access to several Google services."
+
     def __init__(self, entity):
         super(GoogleActions, self).__init__(entity)
 

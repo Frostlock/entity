@@ -21,7 +21,32 @@ class Action(object):
         Command words that trigger this action.
         :return: List of command words
         """
-        return self._command_words
+        try:
+            return self._command_words
+        except AttributeError:
+            raise NotImplementedError("Subclass must implement attribute: _command_words")
+
+    @property
+    def action_name(self):
+        """
+        Command words that trigger this action.
+        :return: List of command words
+        """
+        try:
+            return self._action_name
+        except AttributeError:
+            raise NotImplementedError("Subclass must implement attribute: _action_name")
+
+    @property
+    def action_description(self):
+        """
+        Command words that trigger this action.
+        :return: List of command words
+        """
+        try:
+            return self._action_description
+        except AttributeError:
+            raise NotImplementedError("Subclass must implement attribute: _action_description")
 
     def respond(self, command):
         """
@@ -35,7 +60,10 @@ class Action(object):
         Return whether or not this action matches with the provide command
         :return: True or False
         """
-        raise NotImplementedError("Subclass must implement abstract method: match(command)")
+        if command in self.command_words:
+            return True
+        else:
+            return False
 
     def log(self, msg):
         print(msg)

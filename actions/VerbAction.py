@@ -11,6 +11,9 @@ from actions import Action
 
 class VerbAction(Action):
 
+    _action_name = "Verb interpretation"
+    _action_description = "Placeholder for future natural language processing work."
+
     def __init__(self, entity):
         super(VerbAction, self).__init__(entity)
 
