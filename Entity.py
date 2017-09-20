@@ -104,6 +104,9 @@ class Entity(object):
     def log(self, message):
         print(message)
 
+    def reload_action_library(self):
+        self._action_library = ActionLibrary(self)
+
     def run(self):
         """
         Wrapper around run_voice that adds exception handling. If there is an exception it is stored in the
