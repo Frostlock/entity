@@ -1,4 +1,4 @@
-from actions.Action import Action
+from actions import Action
 
 import httplib2
 import os
@@ -24,8 +24,8 @@ COMMANDS_TASKS = ["what are my to do's", "what are my tasks", "list my tasks", "
 
 class GoogleActions(Action):
 
-    def __init__(self):
-        pass
+    def __init__(self, entity):
+        super(GoogleActions, self).__init__(entity)
 
     def get_credentials(self):
         """Gets valid user credentials from storage.
@@ -80,11 +80,14 @@ class GoogleActions(Action):
                     answer += item['title'] + ", "
             return answer[:-2]
 
-    """
-        Process instruction, return answer if found
-        """
-    def process(self, text_blob):
-        if text_blob in COMMANDS_TASKS:
+    def match(self, command):
+        if command in COMMANDS_TASKS:
+            return True
+        else:
+            return False
+
+    def respond(self, command):
+        if command in COMMANDS_TASKS:
             return self.list_tasks()
         else:
             return ""

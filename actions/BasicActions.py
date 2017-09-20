@@ -1,4 +1,4 @@
-from actions.Action import Action
+from actions import Action
 from datetime import datetime
 from random import choice
 
@@ -19,7 +19,7 @@ COMMANDS_FINALLY = ["finally", "that took long enough"]
 class BasicActions(Action):
 
     def __init__(self, entity):
-        self.entity = entity
+        super(BasicActions, self).__init__(entity)
         self.ACTIONS = [
             (COMMANDS_GREET, self.greet),
             (COMMANDS_STATUS, self.status),
@@ -31,14 +31,19 @@ class BasicActions(Action):
             (COMMANDS_FINALLY, self.respond_to_complaint)
         ]
 
-    def process(self, text_blob):
+    def match(self, command):
+        for commands, func in self.ACTIONS:
+            if command in commands: return True
+        return False
+
+    def respond(self, command):
         """
         Process instruction, return answer if found
-        :param text_blob: instruction
+        :param command: instruction
         :return: string (answer or "")
         """
         for commands, func in self.ACTIONS:
-            if text_blob in commands: return func()
+            if command in commands: return func()
         return ""
 
     def greet(self):

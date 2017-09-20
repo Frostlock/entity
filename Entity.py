@@ -1,9 +1,6 @@
 import components.ElizaTherapist as et
 
-from actions.BasicActions import BasicActions
-from actions.GoogleActions import GoogleActions
-#from actions.VerbAction import VerbAction
-#from textblob import TextBlob
+from actions import ActionLibrary
 
 import components.TextToSpeech as tts
 from components.VoiceRecognizer import VoiceRecognizer
@@ -93,10 +90,13 @@ class Entity(object):
     def voice_recognizer(self):
         return self._voice_recognizer
 
+    @property
+    def action_library(self):
+        return self._action_library
+
     def __init__(self):
-        self.basic_actions = BasicActions(self)
-        self.google_actions = GoogleActions()
         self._voice_recognizer = VoiceRecognizer()
+        self._action_library = ActionLibrary(self)
         self.interaction_time = time()
         self.eliza = et.Eliza()
         self.elizaMode = False
@@ -119,8 +119,8 @@ class Entity(object):
         Runs a voice interface allowing interaction with the entity.
         :return: None
         """
-        greeting = self.basic_actions.greet()
-        tts.speak(greeting)
+        #greeting = self.basic_actions.greet()
+        tts.speak("Start up complete.")
         tts.beep()
 
         while self.running:
@@ -169,8 +169,9 @@ class Entity(object):
         Runs a command line interface allowing to interact with the entity.
         :return: None
         """
-        greeting = self.basic_actions.greet()
-        print(greeting)
+        # greeting = self.basic_actions.greet()
+        print("Start up complete.")
+        tts.beep()
 
         command = ""
         while self.running:
@@ -194,8 +195,8 @@ class Entity(object):
         :return: Textual reaction from the entity.
         """
 
-        ''' Clean up input '''
-        while text[-1] in "!.": text = text[:-1]
+        # Clean up input
+        while text[-1] in "!.?": text = text[:-1]
         text = text.lower()
 
         if text == "":
@@ -207,13 +208,8 @@ class Entity(object):
 
         result = ""
 
-        # First do basic actions
         if result == "":
-            result = self.basic_actions.process(text)
-
-        # Next try some google actions
-        if result == "":
-            result = self.google_actions.process(text)
+            result = self.action_library.process(text)
 
         # Next consider talking to Eliza
         if result == "":
