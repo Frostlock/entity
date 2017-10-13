@@ -121,8 +121,12 @@ class ActionLibrary(object):
             action_classes.extend(actions)
 
         self._actions = []
-        for a in action_classes:
-            self._actions.append(a(self.entity))
+        for ac in action_classes:
+            a = ac(self.entity)
+            for word in a.command_words:
+                if not word.islower():
+                    raise ValueError("Non lower case command word [" + word + "] in " + str(ac))
+            self._actions.append(a)
         print("Loaded " + str(len(self.actions)) + " actions.")
 
     def process(self, command):
