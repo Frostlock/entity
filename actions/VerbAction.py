@@ -13,6 +13,7 @@ class VerbAction(Action):
 
     _action_name = "Verb interpretation"
     _action_description = "Placeholder for future natural language processing work."
+    _command_words = "brolliebrolbroller"
 
     def __init__(self, entity):
         super(VerbAction, self).__init__(entity)
