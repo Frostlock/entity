@@ -2,6 +2,10 @@ import pygame
 import os
 import _thread
 from Entity import Entity, EntityStates
+from components import PygameGui
+
+def light_toggle():
+    print("Toggle lights!")
 
 # Initialize pygame display
 # This approach allows this to run both within an X server environment or from regular
@@ -59,29 +63,29 @@ COLORS_BG = {EntityStates.SLEEPING : (110, 110, 110),
 COLOR_TEXT = (210, 210, 210)
 COLOR_TEXT_BG = (40, 40, 40)
 
-latest_recognition_font = pygame.font.SysFont("monospace", 16)
-latest_recognition_txt = ">"
-latest_recognition_label = latest_recognition_font.render(latest_recognition_txt, 1, COLOR_TEXT)
-
 # Start up a dedicated thread for the entity.
 entity = Entity()
 _thread.start_new_thread(entity.run, ())
 
+# Main menu
+main_menu = PygameGui.Menu(screen)
+# Light toggle
+light_button = PygameGui.Button(100, 100, 50, 50, 'Light', on_click=light_toggle)
+main_menu.add(light_button)
+# Latest recognition label
+latest_recognition_txt = "..."
+latest_recognition_button = PygameGui.Button(10, 10, display_width - 20, 20, latest_recognition_txt, bg_color=COLOR_TEXT_BG, text_color=COLOR_TEXT)
+main_menu.add(latest_recognition_button)
+
 # Main GUI loop
+menu_stack = []
+menu_stack.append(main_menu)
+
 try:
     running = True
     while running:
-        # set background color based on entity state
-        screen.fill(COLORS_BG[entity.state])
-
-        # set latest recognition
-        if latest_recognition_txt != entity.voice_recognizer.latest_recognition:
-            latest_recognition_txt = entity.voice_recognizer.latest_recognition
-            latest_recognition_label = latest_recognition_font.render("> " + latest_recognition_txt, 1, COLOR_TEXT)
-            latest_recognition_surf = pygame.Surface((display_width - 20, 20))
-            latest_recognition_surf.fill(COLOR_TEXT_BG)
-            latest_recognition_surf.blit(latest_recognition_label, (4,2))
-        screen.blit(latest_recognition_surf, (10, 10))
+        if len(menu_stack) == 0: break
+        current_menu = menu_stack[-1]
 
         # Check status of Entity
         # Stop GUI when entity thread has run into an exception.
@@ -90,8 +94,20 @@ try:
             raise entity.thread_exception
         if not entity.running:
             running = False
+        # State of the entity affects current background color
+        current_menu.bg_color = COLORS_BG[entity.state]
+        # Update the latest recognized text
+        if latest_recognition_txt != entity.voice_recognizer.latest_recognition:
+            latest_recognition_button.text = "> " + latest_recognition_txt
 
+        # Draw current menu
+        current_menu.draw()
+
+        # Handle events
         for event in pygame.event.get():
+            # Pass events to current menu
+            current_menu.handle_event(event)
+            # Default event handlers
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.KEYDOWN:
@@ -103,10 +119,55 @@ try:
                 else:
                     screen.fill((0, 255, 0))
 
+        # Refresh display
         pygame.display.flip()
 
-        # Limit framerate to 30 FPS
+        # Limit frame rate to 30 FPS
         clock.tick(30)
+
+    # running = True
+    # while running:
+    #     # set background color based on entity state
+    #     screen.fill(COLORS_BG[entity.state])
+    #
+    #     # set latest recognition
+    #     if latest_recognition_txt != entity.voice_recognizer.latest_recognition:
+    #         latest_recognition_txt = entity.voice_recognizer.latest_recognition
+    #         latest_recognition_label = latest_recognition_font.render("> " + latest_recognition_txt, 1, COLOR_TEXT)
+    #         latest_recognition_surf = pygame.Surface((display_width - 20, 20))
+    #         latest_recognition_surf.fill(COLOR_TEXT_BG)
+    #         latest_recognition_surf.blit(latest_recognition_label, (4,2))
+    #     screen.blit(latest_recognition_surf, (10, 10))
+    #
+    #     # draw button
+    #     light_button.draw(screen)
+    #
+    #     # Check status of Entity
+    #     # Stop GUI when entity thread has run into an exception.
+    #     if entity.thread_exception is not None:
+    #         running = False
+    #         raise entity.thread_exception
+    #     if not entity.running:
+    #         running = False
+    #
+    #     for event in pygame.event.get():
+    #         light_button.handle_event(event)
+    #
+    #         if event.type == pygame.QUIT:
+    #             running = False
+    #         elif event.type == pygame.KEYDOWN:
+    #             if event.key == pygame.K_ESCAPE:
+    #                 running = False
+    #         elif event.type == pygame.MOUSEBUTTONDOWN:
+    #             if event.button == 1:
+    #                 screen.fill((255, 0, 0))
+    #             else:
+    #                 screen.fill((0, 255, 0))
+    #
+    #     pygame.display.flip()
+    #
+    #     # Limit framerate to 30 FPS
+    #     clock.tick(30)
 finally:
     # In case this thread crashes make sure that the thread for the entity terminates.
     entity.shutdown()
