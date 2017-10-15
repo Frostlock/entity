@@ -53,7 +53,7 @@ class EntityGui(object):
                 found = True
                 break
             if not found:
-               raise Exception('No suitable video driver found!')
+               raise Exception('No suitable video driver found! (Start this on the console, not via ssh)')
 
         # force display size to 800*480 (the size of the raspberry touchscreen)
         display_width = 800
