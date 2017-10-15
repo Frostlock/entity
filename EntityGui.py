@@ -10,6 +10,9 @@ COLORS_BG = {EntityStates.SLEEPING : (110, 110, 110),
                  EntityStates.BUSY: (200, 0, 0)}
 COLOR_TEXT = (210, 210, 210)
 COLOR_TEXT_BG = (40, 40, 40)
+COLOR_BUTTON_BG_ON = (238, 232, 170)
+COLOR_BUTTON_BG_OFF = (180, 180, 180)
+COLOR_BUTTON_TEXT = (10, 10, 10)
 
 class EntityGui(object):
     """
@@ -82,10 +85,18 @@ class EntityGui(object):
         # Main menu
         self.main_menu = PygameGui.Menu(self.screen)
         # Light toggles
-        self.light_button_1 = PygameGui.Button(100, 100, 100, 100, 'Toggle Light 1', on_click=self.light_toggle_1)
+        self.light_button_1 = PygameGui.Button(20, 100, 100, 100, 'Light 1',
+                                               text_color=COLOR_BUTTON_TEXT,
+                                               on_click=self.light_toggle_1)
         self.main_menu.add(self.light_button_1)
-        self.light_button_2 = PygameGui.Button(220, 100, 100, 100, 'Toggle Light 2', on_click=self.light_toggle_2)
+        self.light_button_2 = PygameGui.Button(140, 100, 100, 100, 'Light 2',
+                                               text_color=COLOR_BUTTON_TEXT,
+                                               on_click=self.light_toggle_2)
         self.main_menu.add(self.light_button_2)
+        self.light_button_all = PygameGui.Button(20, 220, 220, 220, 'Lights',
+                                               text_color=COLOR_BUTTON_TEXT,
+                                               on_click=self.light_toggle_all)
+        self.main_menu.add(self.light_button_all)
         # Latest recognition label
         self.latest_recognition_txt = "..."
         self.latest_recognition_button = PygameGui.Button(10, 10, display_width - 20, 20, self.latest_recognition_txt, bg_color=COLOR_TEXT_BG, text_color=COLOR_TEXT)
@@ -97,10 +108,30 @@ class EntityGui(object):
 
     def light_toggle_1(self):
         on = self.hue.toggle(1)
-        # if on: self.light_button_1.bg_color
+        if on:
+            self.light_button_1.bg_color = COLOR_BUTTON_BG_ON
+        else:
+            self.light_button_1.bg_color = COLOR_BUTTON_BG_OFF
 
     def light_toggle_2(self):
         on = self.hue.toggle(2)
+        if on:
+            self.light_button_2.bg_color = COLOR_BUTTON_BG_ON
+        else:
+            self.light_button_2.bg_color = COLOR_BUTTON_BG_OFF
+
+    def light_toggle_all(self):
+        on = self.hue.toggle(1)
+        if on:
+            self.hue.turn_on(2)
+            self.light_button_1.bg_color = COLOR_BUTTON_BG_ON
+            self.light_button_2.bg_color = COLOR_BUTTON_BG_ON
+            self.light_button_all.bg_color = COLOR_BUTTON_BG_ON
+        else:
+            self.hue.turn_off(2)
+            self.light_button_1.bg_color = COLOR_BUTTON_BG_OFF
+            self.light_button_2.bg_color = COLOR_BUTTON_BG_OFF
+            self.light_button_all.bg_color = COLOR_BUTTON_BG_OFF
 
     def run(self):
         try:

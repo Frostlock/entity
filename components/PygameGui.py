@@ -17,8 +17,26 @@ class Button(pygame.Rect):
     @text.setter
     def text(self, text):
         self._text = text
-        self._text_surface = self._font.render(self._text, True, self._text_color, self._bg_color)
+        self._refresh()
 
+    @property
+    def bg_color(self):
+        return self._bg_color
+
+    @bg_color.setter
+    def bg_color(self, color):
+        self._bg_color = color
+        self._refresh()
+
+    @property
+    def text_color(self):
+        return self._text_color
+
+    @text_color.setter
+    def text_color(self, color):
+        self._text_color = color
+        self._refresh()
+        
     @property
     def on_click_function(self):
         return self._on_click_function
@@ -35,6 +53,9 @@ class Button(pygame.Rect):
         self.text = text
         self.on_click_function = on_click
 
+    def _refresh(self):
+        self._text_surface = self._font.render(self._text, True, self.text_color, self.bg_color)
+
     def center(self):
         x = self.x + (self.w - self._text_surface.get_width()) // 2
         y = self.y + (self.h - self._text_surface.get_height()) // 2
@@ -42,7 +63,7 @@ class Button(pygame.Rect):
 
     def draw(self, screen):
         # Button
-        screen.fill(self._bg_color, self)
+        screen.fill(self.bg_color, self)
         # Text on button
         screen.blit(self._text_surface, self.center())
 
