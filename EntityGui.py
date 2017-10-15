@@ -81,9 +81,11 @@ class EntityGui(object):
 
         # Main menu
         self.main_menu = PygameGui.Menu(self.screen)
-        # Light toggle
-        light_button = PygameGui.Button(100, 100, 50, 50, 'Light', on_click=self.light_toggle)
-        self.main_menu.add(light_button)
+        # Light toggles
+        self.light_button_1 = PygameGui.Button(100, 100, 100, 100, 'Toggle Light 1', on_click=self.light_toggle_1)
+        self.main_menu.add(self.light_button_1)
+        self.light_button_2 = PygameGui.Button(220, 100, 100, 100, 'Toggle Light 2', on_click=self.light_toggle_2)
+        self.main_menu.add(self.light_button_2)
         # Latest recognition label
         self.latest_recognition_txt = "..."
         self.latest_recognition_button = PygameGui.Button(10, 10, display_width - 20, 20, self.latest_recognition_txt, bg_color=COLOR_TEXT_BG, text_color=COLOR_TEXT)
@@ -93,8 +95,12 @@ class EntityGui(object):
         self.menu_stack = []
         self.menu_stack.append(self.main_menu)
 
-    def light_toggle(self):
-        self.hue.turn_off(1)
+    def light_toggle_1(self):
+        on = self.hue.toggle(1)
+        # if on: self.light_button_1.bg_color
+
+    def light_toggle_2(self):
+        on = self.hue.toggle(2)
 
     def run(self):
         try:
