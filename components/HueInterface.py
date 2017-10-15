@@ -45,10 +45,10 @@ class HueInterface(object):
         light_on = r.json()["state"]["on"]
         if light_on:
             self.turn_off(light_nbr)
-            return True
+            return False
         else:
             self.turn_on(light_nbr)
-            return False
+            return True
 
 if __name__ == '__main__':
     DEBUG = True
