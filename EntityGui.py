@@ -84,6 +84,7 @@ class EntityGui(object):
 
         # Main menu
         self.main_menu = PygameGui.Menu(self.screen)
+
         # Light toggles
         self.light_button_1 = PygameGui.Button(20, 100, 100, 100, 'Light 1',
                                                text_color=COLOR_BUTTON_TEXT,
@@ -98,7 +99,18 @@ class EntityGui(object):
                                                on_click=self.light_toggle_all)
         self.main_menu.add(self.light_button_all)
 
-        self.color_picker = PygameGui.ColorPicker(360, 40, 400, 400,
+        # Brightness buttons
+        self.Button_brightness_up = PygameGui.Button(260, 220, 100, 100, '+',
+                                                 text_color=COLOR_BUTTON_TEXT,
+                                                 on_click=self.light_set_brightness_up)
+        self.main_menu.add(self.Button_brightness_up)
+        self.Button_brightness_down = PygameGui.Button(260, 340, 100, 100, '-',
+                                                 text_color=COLOR_BUTTON_TEXT,
+                                                 on_click=self.light_set_brightness_down)
+        self.main_menu.add(self.Button_brightness_down)
+
+        # Color picker
+        self.color_picker = PygameGui.ColorPicker(380, 40, 400, 400,
                                                   image_path='non_git/colorpicker/color-picker.jpg',
                                                   on_click = self.light_set_color_all)
         self.main_menu.add(self.color_picker)
@@ -138,6 +150,14 @@ class EntityGui(object):
             self.light_button_1.bg_color = COLOR_BUTTON_BG_OFF
             self.light_button_2.bg_color = COLOR_BUTTON_BG_OFF
             self.light_button_all.bg_color = COLOR_BUTTON_BG_OFF
+
+    def light_set_brightness_up(self):
+        self.hue.set_brightness_up(1)
+        self.hue.set_brightness_up(2)
+
+    def light_set_brightness_down(self):
+        self.hue.set_brightness_down(1)
+        self.hue.set_brightness_down(2)
 
     def light_set_color_all(self, color):
         assert isinstance(color, pygame.Color)

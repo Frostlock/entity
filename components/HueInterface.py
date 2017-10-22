@@ -50,6 +50,52 @@ class HueInterface(object):
             self.turn_on(light_nbr)
             return True
 
+    def get_brightness(self, light_nbr):
+        """
+        Returns the current brightness of the light
+        :param light_nbr: Number of the light from which to get the brightness.
+        :return: Brightness
+        """
+        r = requests.get(HUE_BRIDGE_URL + "/lights/" + str(light_nbr), timeout=5)
+        current_brightness = r.json()["state"]["bri"]
+        return current_brightness
+
+    def set_brightness(self, light_nbr, brightness):
+        """
+        Set the brightness of a light
+        :param light_nbr: number of the light for which to set the brightness
+        :param brightness: Brightness is a scale from 1 (the minimum the light is capable of) to 254 (the maximum).
+               Note: a brightness of 1 is not off
+        :return: None
+        """""
+        URL = HUE_BRIDGE_URL + "/lights/" + str(light_nbr) + "/state"
+        data = {"on": True, "bri": brightness}
+        r = requests.put(URL, json.dumps(data), timeout=5)
+        if DEBUG: print(r.text)
+        return r.text
+
+    def set_brightness_up(self, light_nbr, amount=10):
+        """
+        Increases the brightness of a light
+        :param light_nbr: number of the light for which to increase the brightness
+        :param amount: increment to be used
+        :return: None
+        """""
+        brightness = self.get_brightness(light_nbr) + amount
+        if brightness > 254: brightness = 254
+        self.set_brightness(light_nbr, brightness)
+
+    def set_brightness_down(self, light_nbr, amount=10):
+        """
+        Decreases the brightness of a light
+        :param light_nbr: number of the light for which to decrease the brightness
+        :param amount: increment to be used
+        :return: None
+        """""
+        brightness = self.get_brightness(light_nbr) - amount
+        if brightness < 1: brightness = 1
+        self.set_brightness(light_nbr, brightness)
+
     def set_color(self, light_nbr, hue, saturation):
         """
         Set the color of a light
@@ -59,8 +105,7 @@ class HueInterface(object):
         :return: None
         """""
         URL = HUE_BRIDGE_URL + "/lights/" + str(light_nbr) + "/state"
-        data = {"on": True, "hue": hue, "sat": saturation, "bri": 254}
-        print(data)
+        data = {"on": True, "hue": hue, "sat": saturation}
         r = requests.put(URL, json.dumps(data), timeout=5)
         if DEBUG: print(r.text)
         return r.text
