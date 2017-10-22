@@ -1,13 +1,27 @@
 #Pygame GUI extension
 import pygame
 
-class Button(pygame.Rect):
+class GuiControl(pygame.Rect):
     """
-    Button class
-    Instantiate
+    Super class for my custom pygame GUI controls.
     call draw when screen update is needed
     call handle_event when event handling is required
     typically both should be called in the main pygame loop
+    """
+
+    def __init__(self, x, y, w, h):
+        super(GuiControl, self).__init__(x, y, w, h)
+
+    def draw(self, screen):
+        raise NotImplementedError()
+
+    def handle_event(self, event):
+        raise NotImplementedError()
+
+
+class Button(GuiControl):
+    """
+    Button class
     """
 
     @property
@@ -56,16 +70,13 @@ class Button(pygame.Rect):
     def _refresh(self):
         self._text_surface = self._font.render(self._text, True, self.text_color, self.bg_color)
 
-    def center(self):
-        x = self.x + (self.w - self._text_surface.get_width()) // 2
-        y = self.y + (self.h - self._text_surface.get_height()) // 2
-        return (x, y)
-
     def draw(self, screen):
         # Button
         screen.fill(self.bg_color, self)
         # Text on button
-        screen.blit(self._text_surface, self.center())
+        x = self.x + (self.w - self._text_surface.get_width()) // 2
+        y = self.y + (self.h - self._text_surface.get_height()) // 2
+        screen.blit(self._text_surface, (x, y))
 
     def handle_event(self, event):
         if self.on_click_function is not None:
@@ -122,9 +133,7 @@ class Menu(object):
             component.handle_event(event)
 
 
-# TODO: Shared super class for my Rect subclasses
-
-class ColorPicker(pygame.Rect):
+class ColorPicker(GuiControl):
     """
     Color picker object
     """
