@@ -120,3 +120,41 @@ class Menu(object):
         # Pass all events to children components
         for component in self.components:
             component.handle_event(event)
+
+
+# TODO: Shared super class for my Rect subclasses
+
+class ColorPicker(pygame.Rect):
+    """
+    Color picker object
+    """
+
+    @property
+    def on_click_function(self):
+        return self._on_click_function
+
+    @on_click_function.setter
+    def on_click_function(self, function):
+        self._on_click_function = function
+
+    def __init__(self, x, y, w, h, image_path, on_click=None):
+        super(ColorPicker, self).__init__(x, y, w, h)
+        self.on_click_function = on_click
+        #Load image
+        self._image = pygame.image.load(image_path).convert()
+
+    def draw(self, screen):
+        screen.blit(self._image, self)
+
+    def handle_event(self, event):
+        if self.on_click_function is not None:
+            # Can only handle mouse events
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if self.collidepoint(*event.pos):
+                    # convert mouse pposition to image coords
+                    img_x = event.pos[0] - self.x
+                    img_y = event.pos[1] - self.y
+                    # get color at image coords
+                    color = self._image.get_at((img_x, img_y))
+                    # call handler
+                    self.on_click_function(color)

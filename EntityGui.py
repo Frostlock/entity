@@ -97,6 +97,12 @@ class EntityGui(object):
                                                text_color=COLOR_BUTTON_TEXT,
                                                on_click=self.light_toggle_all)
         self.main_menu.add(self.light_button_all)
+
+        self.color_picker = PygameGui.ColorPicker(360, 40, 400, 400,
+                                                  image_path='non_git/colorpicker/color-picker.jpg',
+                                                  on_click = self.light_set_color_all)
+        self.main_menu.add(self.color_picker)
+
         # Latest recognition label
         self.latest_recognition_txt = "..."
         self.latest_recognition_button = PygameGui.Button(10, 10, display_width - 20, 20, self.latest_recognition_txt, bg_color=COLOR_TEXT_BG, text_color=COLOR_TEXT)
@@ -132,6 +138,11 @@ class EntityGui(object):
             self.light_button_1.bg_color = COLOR_BUTTON_BG_OFF
             self.light_button_2.bg_color = COLOR_BUTTON_BG_OFF
             self.light_button_all.bg_color = COLOR_BUTTON_BG_OFF
+
+    def light_set_color_all(self, color):
+        assert isinstance(color, pygame.Color)
+        self.hue.set_pygame_color(1, color)
+        self.hue.set_pygame_color(2, color)
 
     def run(self):
         try:
