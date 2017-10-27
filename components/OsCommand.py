@@ -7,7 +7,7 @@ def get_ip_for_mac(mac):
     :param mac: mac address for which you want to retrieve the IP
     :return: IP
     """
-    result = run(["./OsCommand-GetIpForMac.sh", mac], stdout=PIPE)
+    result = run(["./components/OsCommand-GetIpForMac.sh", mac], stdout=PIPE)
     result.check_returncode()
     lines = result.stdout.decode('utf-8').splitlines()
     if len(lines) > 0:
