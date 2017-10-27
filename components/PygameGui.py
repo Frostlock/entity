@@ -136,6 +136,7 @@ class Menu(object):
 class ColorPicker(GuiControl):
     """
     Color picker object
+    Instantiate this object with an image. On click the event handler will be called with the color of the clicked pixel.
     """
 
     @property
