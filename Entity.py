@@ -182,7 +182,7 @@ class Entity(object):
                     self.state = EntityStates.BUSY
                     self.interaction_time = time()
                     answer = self.process(command)
-                    if answer != "":
+                    if answer is not None and answer != "":
                         tts.speak(answer)
                         self.interaction_time = time()
                         self.state = EntityStates.LISTENING
