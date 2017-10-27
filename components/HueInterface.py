@@ -1,6 +1,6 @@
 import requests
 import json
-from components.OsCommand import get_ip_for_mac
+import components.OsCommand as OsCommand
 
 # These settings are specific to your HUE bridge
 HUE_API = "/api/kMLljmhPLjYjvqUwqAlI5AJWivt-FRyO06vT8my-"
@@ -29,7 +29,7 @@ class HueInterface(object):
 
     def __init__(self):
         # Find HUE bridge on the network
-        hue_ip = get_ip_for_mac(HUE_MAC)
+        hue_ip = OsCommand.get_ip_for_mac(HUE_MAC)
         if hue_ip is None:
             print("Warning: HUE bridge not found.")
             self._api_url = None
@@ -155,6 +155,7 @@ class HueInterface(object):
 
 if __name__ == '__main__':
     DEBUG = True
+    OsCommand.SCRIPTS_PATH = "./"
     Hue = HueInterface()
     # status = Hue.bridge_status()
     light_nbr = 2
