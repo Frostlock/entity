@@ -175,6 +175,7 @@ class EntityGui(object):
                 # Stop GUI when entity thread has run into an exception.
                 if self.entity.thread_exception is not None:
                     running = False
+                    print(self.entity.thread_exception)
                     raise self.entity.thread_exception
                 if not self.entity.running:
                     running = False

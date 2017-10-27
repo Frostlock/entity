@@ -38,6 +38,7 @@ def beep():
     play_mp3("./components/beep.mp3")
 
 def speak(text, lang='en'):
+    print("gTTS: " + text)
     tts = gTTS(text=text, lang=lang)
     f = tempfile.SpooledTemporaryFile()
     tts.write_to_fp(f)

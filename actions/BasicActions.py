@@ -43,7 +43,7 @@ class BasicActionStatusReport(Action):
 class BasicActionShutdown(Action):
     _action_name = "Shutdown"
     _action_description = "This action shuts down the entity."
-    _command_words = ["exit", "quit", "shutdown", "shutdown system", "goodbye", "shut down"]
+    _command_words = ["exit", "quit", "shutdown", "goodbye", "shut down"]
 
     def __init__(self, entity):
         super(BasicActionShutdown, self).__init__(entity)
@@ -66,6 +66,34 @@ class BasicActionSleep(Action):
         self.log("Going to sleep")
         self.entity.sleep()
         return ""
+
+
+class BasicActionSystemShutdown(Action):
+    _action_name = "System shutdown"
+    _action_description = "This action shuts down the entire Operating System."
+    _command_words = ["system shutdown", "shutdown system"]
+
+    def __init__(self, entity):
+        super(BasicActionSystemShutdown, self).__init__(entity)
+
+    def respond(self, command):
+        self.log("Initiating full system shutdown")
+        self.entity.system_shutdown()
+        return "Complete shutdown started."
+
+
+class BasicActionSystemReboot(Action):
+    _action_name = "System reboot"
+    _action_description = "This action reboots the entire Operating System."
+    _command_words = ["system reboot", "reboot system"]
+
+    def __init__(self, entity):
+        super(BasicActionSystemReboot, self).__init__(entity)
+
+    def respond(self, command):
+        self.log("Initiating full system reboot")
+        self.entity.system_reboot()
+        return "Full reboot initialized"
 
 
 class BasicActionRespondToThanks(Action):

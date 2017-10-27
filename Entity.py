@@ -1,6 +1,7 @@
 import components.ElizaTherapist as et
 
 from actions import ActionLibrary
+from components.OsCommand import system_reboot, system_shutdown
 
 import components.TextToSpeech as tts
 from components.VoiceRecognizer import VoiceRecognizer
@@ -22,8 +23,10 @@ class EntityStates(object):
     SLEEPING = 0   # In the sleeping state the entity will wait for one of the wakewords
     LISTENING = 1  # Entity is listening for instructions (not waiting for the wakeword)
     BUSY = 2       # Entity is busy and not ready for instructions
+    SYSTEM_SHUTDOWN = 3  # Entity will perform full system shutdown
+    SYSTEM_REBOOT = 4  # Entity will perform full system reboot
 
-    ALL_STATES = [SLEEPING, LISTENING, BUSY]
+    ALL_STATES = [SLEEPING, LISTENING, BUSY, SYSTEM_SHUTDOWN, SYSTEM_REBOOT]
 
     @staticmethod
     def __contains__(state):
@@ -140,6 +143,14 @@ class Entity(object):
         tts.beep()
 
         while self.running:
+            # System shutdown state
+            if self.state == EntityStates.SYSTEM_SHUTDOWN:
+                system_shutdown()
+
+            # System reboot state
+            if self.state == EntityStates.SYSTEM_REBOOT:
+                system_reboot()
+
             # Busy state
             # After being busy always go to previous state
             if self.state == EntityStates.BUSY:
@@ -191,6 +202,14 @@ class Entity(object):
 
         command = ""
         while self.running:
+            # System shutdown state
+            if self.state == EntityStates.SYSTEM_SHUTDOWN:
+                system_shutdown()
+
+            # System reboot state
+            if self.state == EntityStates.SYSTEM_REBOOT:
+                system_reboot()
+
             command = input(">")
             print(self.process(command))
 
@@ -203,6 +222,20 @@ class Entity(object):
 
     def sleep(self):
         self.state = EntityStates.SLEEPING
+
+    def system_shutdown(self):
+        """
+        utility function to trigger full shutdown of system.
+        :return: None
+        """
+        self.state = EntityStates.SYSTEM_SHUTDOWN
+
+    def system_reboot(self):
+        """
+        utility function to trigger full reboot of system.
+        :return: None
+        """
+        self.state = EntityStates.SYSTEM_REBOOT
 
     def process(self, text):
         """

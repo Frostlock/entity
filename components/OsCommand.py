@@ -1,4 +1,5 @@
 from subprocess import Popen, run, PIPE, TimeoutExpired
+from time import sleep
 
 SCRIPTS_PATH = "./components/"
 
@@ -29,6 +30,22 @@ def get_ip_for_hue_bridge():
         return lines[0]
     else:
         return None
+
+def system_reboot():
+    """
+    Reboots the entire system.
+    :return: None
+    """
+    sleep(5)
+    run([SCRIPTS_PATH + "OsCommand-SystemReboot.sh"])
+
+def system_shutdown():
+    """
+    Shuts down the entire system.
+    :return: None
+    """
+    sleep(5)
+    run([SCRIPTS_PATH + "OsCommand-SystemShutdown.sh"])
 
 if __name__ == '__main__':
     SCRIPTS_PATH = "./"
