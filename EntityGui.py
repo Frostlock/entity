@@ -111,7 +111,7 @@ class EntityGui(object):
 
         # Color picker
         self.color_picker = PygameGui.ColorPicker(380, 40, 400, 400,
-                                                  image_path='non_git/colorpicker/color-picker.jpg',
+                                                  image_path='graphics/colorpicker/colorpicker.jpg',
                                                   on_click = self.light_set_color_all)
         self.main_menu.add(self.color_picker)
 
