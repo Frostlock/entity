@@ -1,8 +1,14 @@
 import requests
 import json
+from components.OsCommand import get_ip_for_mac
 
-HUE_BRIDGE_URL = "http://192.168.0.115/api/kMLljmhPLjYjvqUwqAlI5AJWivt-FRyO06vT8my-"
+# These settings are specific to your HUE bridge
+HUE_API = "/api/kMLljmhPLjYjvqUwqAlI5AJWivt-FRyO06vT8my-"
+HUE_MAC = "00:17:88:71:33:87"
 DEBUG = False
+
+class HueNotAvailableException(Exception):
+    pass
 
 class HueInterface(object):
     """
@@ -12,24 +18,40 @@ class HueInterface(object):
     To understand how to generate the proper Hue API interface connection
     """
 
+    @property
+    def api_url(self):
+        """
+        URL for HUE API. If the Hue bridge is not found this will raise an exception.
+        :return: API URL
+        """
+        if self._api_url is None: raise HueNotAvailableException()
+        return self._api_url
+
     def __init__(self):
-        pass
-        #TODO: read config (nbr of lights etc...)
+        # Find HUE bridge on the network
+        hue_ip = get_ip_for_mac(HUE_MAC)
+        if hue_ip is None:
+            print("Warning: HUE bridge not found.")
+            self._api_url = None
+        else:
+            print("HUE bridge found on IP " + hue_ip)
+            self._api_url = "http://" + hue_ip + HUE_API
+            print("HUE API set to: " + self.api_url)
 
     def bridge_status(self):
-        r = requests.get(HUE_BRIDGE_URL, timeout=5)
+        r = requests.get(self.api_url, timeout=5)
         if DEBUG: print(r.text)
         return r.text
 
     def turn_on(self, light_nbr):
-        URL = HUE_BRIDGE_URL + "/lights/" + str(light_nbr) + "/state"
+        URL = self.api_url + "/lights/" + str(light_nbr) + "/state"
         data = {"on": True}  #, "sat": 254, "bri": 254, "hue": 5000}
         r = requests.put(URL, json.dumps(data), timeout=5)
         if DEBUG: print(r.text)
         return r.text
 
     def turn_off(self, light_nbr):
-        URL = HUE_BRIDGE_URL + "/lights/" + str(light_nbr) + "/state"
+        URL = self.api_url + "/lights/" + str(light_nbr) + "/state"
         data = {"on": False}
         r = requests.put(URL, json.dumps(data), timeout=5)
         if DEBUG: print(r.text)
@@ -41,7 +63,7 @@ class HueInterface(object):
         :param light_nbr: number of the light to be toggled
         :return: Boolean status of light (True=On, False=Off)
         """
-        r = requests.get(HUE_BRIDGE_URL + "/lights/" + str(light_nbr), timeout=5)
+        r = requests.get(self.api_url + "/lights/" + str(light_nbr), timeout=5)
         light_on = r.json()["state"]["on"]
         if light_on:
             self.turn_off(light_nbr)
@@ -56,7 +78,7 @@ class HueInterface(object):
         :param light_nbr: Number of the light from which to get the brightness.
         :return: Brightness
         """
-        r = requests.get(HUE_BRIDGE_URL + "/lights/" + str(light_nbr), timeout=5)
+        r = requests.get(self.api_url + "/lights/" + str(light_nbr), timeout=5)
         current_brightness = r.json()["state"]["bri"]
         return current_brightness
 
@@ -68,7 +90,7 @@ class HueInterface(object):
                Note: a brightness of 1 is not off
         :return: None
         """""
-        URL = HUE_BRIDGE_URL + "/lights/" + str(light_nbr) + "/state"
+        URL = self.api_url + "/lights/" + str(light_nbr) + "/state"
         data = {"on": True, "bri": brightness}
         r = requests.put(URL, json.dumps(data), timeout=5)
         if DEBUG: print(r.text)
@@ -104,7 +126,7 @@ class HueInterface(object):
         :param saturation: Saturation of the light. 254 is the most saturated (colored) and 0 is the least saturated (white).
         :return: None
         """""
-        URL = HUE_BRIDGE_URL + "/lights/" + str(light_nbr) + "/state"
+        URL = self.api_url + "/lights/" + str(light_nbr) + "/state"
         data = {"on": True, "hue": hue, "sat": saturation}
         r = requests.put(URL, json.dumps(data), timeout=5)
         if DEBUG: print(r.text)

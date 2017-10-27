@@ -81,3 +81,6 @@ Idea is to make the entity more aware of the current context enhancing precision
 Emotions would be fun too, for example entity getting annoyed after same questions, bored after silence, apologetic after not understanding several instructions in a row.
 
 ##### Use Google speech API directly instead of through the extra gTTS module?**
+
+##### GUI improvements
+- some kind of screensaver?
