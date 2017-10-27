@@ -11,7 +11,7 @@ class HueActionTurnOn(Action):
 
     _action_name = "Turn on Hue lights"
     _action_description = "Turn on a specific Hue light."
-    _command_words = ["lights on", "turn the light on", "turn on the light", "turn on the lights"]
+    _command_words = ["lights on", "turn the light on", "turn the lights on", "turn on the light", "turn on the lights"]
 
     def __init__(self, entity):
         super(HueActionTurnOn, self).__init__(entity)
@@ -27,7 +27,7 @@ class HueActionTurnOff(Action):
 
     _action_name = "Turn off Hue lights"
     _action_description = "Turn off a specific Hue light."
-    _command_words = ["lights out", "lights off", "turn the light off", "turn of the light", "turn of the lights"]
+    _command_words = ["lights out", "lights off", "turn the light off", "turn the lights off", "turn of the light", "turn of the lights"]
 
     def __init__(self, entity):
         super(HueActionTurnOff, self).__init__(entity)
